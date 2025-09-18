@@ -384,10 +384,16 @@ a.button-edit-team {
     justify-content: center;
 }
 
-a.delete-team {
+button.delete-team {
     color: #E14343;
     font-size: 14px;
     font-weight: 600;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-decoration: underline;
+    cursor: pointer;
 }
 
 table#team-container thead tr th:last-child {
@@ -455,13 +461,18 @@ form ul {
     font-style: italic;
 }
 
-a.delete-task {
+button.delete-task {
     color: #E14343;
     font-size: 14px;
     font-weight: 600;
     text-align: center;
+    margin: 20px auto 0;
+    background: none;
+    border: none;
+    padding: 0;
+    text-decoration: underline;
+    cursor: pointer;
     display: block;
-    margin-top: 20px;
 }
 
 form .select2-container--default .select2-selection--multiple .select2-selection__choice {
@@ -508,18 +519,16 @@ form .select2-container--default .select2-selection--multiple .select2-selection
     }
 }
 
-/* Options survolées/actives */
 .ts-wrapper .ts-dropdown .option.active {
     background-color: #4D8077 !important;
     color: #fff !important;
 }
 
-/* couleur de fond et texte des items sélectionnés */
 .ts-wrapper .ts-control .item {
-    background-color: #4D8077 !important;   /* couleur de fond */
-    color: #fff !important;                 /* couleur du texte */
-    border-radius: 50px;                     /* arrondir les coins (optionnel) */
-    padding: 2px 6px;                        /* un peu d’espace interne */
+    background-color: #4D8077 !important;
+    color: #fff !important;
+    border-radius: 50px;
+    padding: 2px 6px;
 }
 
 .ts-wrapper.plugin-remove_button:not(.rtl) .item .remove {
@@ -527,7 +536,6 @@ form .select2-container--default .select2-selection--multiple .select2-selection
     margin-left: 6px;
 }
 
-/* Items sélectionnés (tags) */
 div.ts-control > div.item[data-ts-item] {
     background-image: none !important;
     box-shadow: none !important;

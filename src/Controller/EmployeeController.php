@@ -44,7 +44,7 @@ final class EmployeeController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_employee_delete', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/delete/{id}', name: 'app_employee_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(EmployeeRepository $repository, EntityManagerInterface $entityManager, int $id): Response
     {
         $employee = $repository->find($id);

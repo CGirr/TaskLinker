@@ -22,7 +22,13 @@
     <br>
     {% if task.id is not null %}
         <button class="button button-submit">Modifier</button>
-        <a href="{{ path('app_task_delete', {id: task.id}) }}" class="delete-task">Supprimer</a>
+        <form
+            action="{{ path('app_task_delete', {id: task.id}) }}"
+            method="POST"
+            onsubmit="return confirm('Supprimer cette tâche ?');"
+        >
+            <button class="delete-task" type="submit">Supprimer</button>
+        </form>
     {% else %}
         <button class="button button-submit">Continuer</button>
     {% endif %}

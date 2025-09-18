@@ -32,9 +32,12 @@
                 <a class="button button-edit-team" href="{{ path('app_employee_edit', {id: employee.id}) }}">
                     Éditer
                 </a>
-                <a class="delete-team" href="{{ path('app_employee_delete', {id: employee.id }) }}">
-                    Supprimer
-                </a>
+                <form
+                    action="{{ path('app_employee_delete', {'id': employee.id}) }}"
+                    method="POST" onsubmit="return confirm('Supprimer cet employé ?');"
+                >
+                    <button class="delete-team" type="submit">Supprimer</button>
+                </form>
             </td>
         </tr>
         {% else %}

@@ -20,13 +20,14 @@
                 <a href="{{ path('app_projects') }}" id="logo">
                     <img src="{{ asset('./images/logo.png') }}" alt="Logo TaskLinker" />
                 </a>
+                {% set currentRoute = app.current_route %}
                 <ul id="main-menu">
-                    <li class="active">
+                    <li class="{% if currentRoute starts with 'app_projects' %}active{% endif %}">
                         <a href="{{ path('app_projects') }}">
                             <i class="fa-solid fa-list-check"></i> Projets
                         </a>
                     </li>
-                    <li>
+                    <li class="{% if currentRoute starts with 'app_employee' %}active{% endif %}">
                         <a href="{{ path('app_employee') }}">
                             <i class="fa-regular fa-user"></i> Équipe
                         </a>

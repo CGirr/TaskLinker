@@ -17,7 +17,8 @@ final class TaskController extends AbstractController
 {
     #[Route('/new/{projectId}', name: 'app_task_new', requirements: ['projectId' => '\d+'], methods: ['GET', 'POST'])]
     #[Route('/edit/{id}', name: 'app_task_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
-    public function new(?Task $task, ?int $projectId, Request $request, EntityManagerInterface $entityManager, ProjectRepository $projectRepository): Response
+    public function new(
+        ?Task $task, ?int $projectId, Request $request, EntityManagerInterface $entityManager, ProjectRepository $projectRepository): Response
     {
         $task ??= new Task();
 
@@ -46,7 +47,7 @@ final class TaskController extends AbstractController
         ]);
     }
 
-    #[Route('/delete/{id}', name: 'app_task_delete', requirements: ['id' => '\d+'], methods: ['GET'])]
+    #[Route('/delete/{id}', name: 'app_task_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(TaskRepository $repository, EntityManagerInterface $entityManager, int $id): Response
     {
         $task = $repository->find($id);
