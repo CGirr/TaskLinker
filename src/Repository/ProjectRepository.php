@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -14,6 +15,16 @@ class ProjectRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Project::class);
+    }
+
+    public function findActiveProjects(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.archived = :archived')
+            ->setParameter('archived', false)
+            ->getQuery()
+            ->getResult()
+        ;
     }
 
 //    /**

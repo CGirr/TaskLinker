@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% set action = app.current_route == 'app_projects_new' ? 'Ajouter ' : 'Éditer ' %}
+
+{% block title %}{{ action }}un projet - TaskLinker{% endblock %}
+
+{% block header %}<h1>{{ action }}un projet</h1>{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.title, {label: 'Titre du projet'}) }}
+    {{ form_row(form.members, {label: 'Inviter des membres'}) }}
+    <button class="button button-submit">Continuer</button>
+    {{ form_end(form) }}
+{% endblock %}
