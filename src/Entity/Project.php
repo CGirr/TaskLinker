@@ -31,8 +31,8 @@ class Project
     #[ORM\OneToMany(targetEntity: Task::class, mappedBy: 'project')]
     private Collection $tasks;
 
-    #[ORM\Column]
-    private ?bool $archived = null;
+    #[ORM\Column(type: 'boolean', nullable: true, options: ['default' => false])]
+    private ?bool $archived = false;
 
     public function __construct()
     {

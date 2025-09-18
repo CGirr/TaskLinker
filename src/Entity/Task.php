@@ -15,22 +15,28 @@ class Task
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Length(max: 255)]
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
+    #[Assert\Length(max: 1000)]
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $date = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(enumType: taskstatus::class)]
     private ?taskstatus $status = null;
 
+    #[Assert\Type(Employee::class)]
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: true, onDelete: 'SET NULL')]
     private ?Employee $member = null;
 
+    #[Assert\NotNull]
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Project $project = null;

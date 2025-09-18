@@ -508,6 +508,44 @@ form .select2-container--default .select2-selection--multiple .select2-selection
     }
 }
 
+/* Options survolées/actives */
+.ts-wrapper .ts-dropdown .option.active {
+    background-color: #4D8077 !important;
+    color: #fff !important;
+}
+
+/* couleur de fond et texte des items sélectionnés */
+.ts-wrapper .ts-control .item {
+    background-color: #4D8077 !important;   /* couleur de fond */
+    color: #fff !important;                 /* couleur du texte */
+    border-radius: 50px;                     /* arrondir les coins (optionnel) */
+    padding: 2px 6px;                        /* un peu d’espace interne */
+}
+
+.ts-wrapper.plugin-remove_button:not(.rtl) .item .remove {
+    border-left: 1px solid #1C5B50;
+    margin-left: 6px;
+}
+
+/* Items sélectionnés (tags) */
+div.ts-control > div.item[data-ts-item] {
+    background-image: none !important;
+    box-shadow: none !important;
+    background-color: #4D8077 !important;
+    color: #fff !important;
+    border-radius: 50px !important;
+    padding: 2px 6px;
+    border: 2px solid #2f5e56 !important;
+}
+
+.ts-wrapper .ts-control .item:hover {
+    background-color: #1C5B50 !important;
+}
+
+#task_member-ts-control {
+    caret-color: transparent;  /* supprime le curseur clignotant */
+}
+
 @media (max-width: 668px) {
     div#content {
         padding: 30px;

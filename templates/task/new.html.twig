@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% set action = app.current_route == 'app_projects_new' ? 'Créer ' : 'Éditer ' %}
+
+{% block title %}{{ action }}une tâche - TaskLinker{% endblock %}
+
+{% block header %}
+    {% if action == 'Éditer ' %}
+        <h1>{{ task.title }}</h1>
+    {% else %}
+        <h1>Créer une tâche</h1>
+    {% endif %}
+{% endblock %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_row(form.title, {label: 'Titre de la tâche'}) }}
+    {{ form_row(form.description, {label: 'Description'}) }}
+    {{ form_row(form.date, {label: 'Date'}) }}
+    {{ form_row(form.status, {label: 'Statut'}) }}
+    {{ form_row(form.member, {label: 'Membre'}) }}
+    <br>
+    {% if task.id is not null %}
+        <button class="button button-submit">Modifier</button>
+        <a href="{{ path('app_task_delete', {id: task.id}) }}" class="delete-task">Supprimer</a>
+    {% else %}
+        <button class="button button-submit">Continuer</button>
+    {% endif %}
+    {{ form_end(form) }}
+{% endblock %}
