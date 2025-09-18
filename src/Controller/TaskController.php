@@ -30,7 +30,9 @@ final class TaskController extends AbstractController
             $task->setProject($project);
         }
 
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, $task, [
+            'members' => $task->getProject()->getMembers()->toArray()
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -48,13 +50,17 @@ final class TaskController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_task_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function delete(TaskRepository $repository, EntityManagerInterface $entityManager, int $id): Response
+    public function delete(TaskRepository $repository, EntityManagerInterface $entityManager, Request $request, int $id): Response
     {
         $task = $repository->find($id);
 
         if (!$task) {
             throw $this->createNotFoundException('Tâche introuvable');
-        };
+        }
+
+        if (!$this->isCsrfTokenValid('delete_task' . $task->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide');
+        }
 
         $entityManager->remove($task);
         $entityManager->flush();

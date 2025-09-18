@@ -22,15 +22,20 @@
     <br>
     {% if task.id is not null %}
         <button class="button button-submit">Modifier</button>
+    {% else %}
+        <button class="button button-submit">Continuer</button>
+    {% endif %}
+    {{ form_end(form) }}
+
+
+    {% if task.id is not null %}
         <form
             action="{{ path('app_task_delete', {id: task.id}) }}"
             method="POST"
             onsubmit="return confirm('Supprimer cette tâche ?');"
         >
+            <input type="hidden" name="_token" value="{{ csrf_token('delete_task' ~ task.id) }}">
             <button class="delete-task" type="submit">Supprimer</button>
         </form>
-    {% else %}
-        <button class="button button-submit">Continuer</button>
     {% endif %}
-    {{ form_end(form) }}
 {% endblock %}
