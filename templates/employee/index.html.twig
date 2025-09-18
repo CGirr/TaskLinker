@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des employés - TaskLinker{% endblock %}
+
+{% block header %}<h1>Équipe</h1>{% endblock %}
+
+{% block body %}
+    <table id="team-container">
+        <thead>
+        <tr>
+            <th>Prénom, Nom</th>
+            <th>Statut</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+        <tr>
+            <td>
+                <div class="employee-infos">
+                    <div class="employee-avatar">
+                        {{ employee.firstname|first ~ employee.lastname|first }}
+                    </div>
+                    <div class="employee-coords">
+                        <strong>{{ employee.firstname ~ ' ' ~ employee.lastname }}</strong>
+                        <span>{{ employee.email }}</span>
+                    </div>
+                </div>
+            </td>
+            <td>{{ employee.status.value }}</td>
+            <td>
+                <a class="button button-edit-team" href="{{ path('app_employee_edit', {id: employee.id}) }}">
+                    Éditer
+                </a>
+                <a class="delete-team" href="{{ path('app_employee_delete', {id: employee.id }) }}">
+                    Supprimer
+                </a>
+            </td>
+        </tr>
+        {% else %}
+            <div>
+                Aucun employé n'est enregistré.
+            </div>
+        {% endfor %}
+        </tbody>
+    </table></div>
+{% endblock %}

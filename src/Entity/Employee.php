@@ -7,6 +7,7 @@ use App\Repository\EmployeeRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 class Employee
@@ -16,18 +17,26 @@ class Employee
     #[ORM\Column]
     private ?int $id = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Type('string')]
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
+    #[Assert\NotBlank]
+    #[Assert\Assert\Email()]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    #[Assert\NotNull]
     #[ORM\Column(enumType: EmployeeStatus::class)]
     private ?EmployeeStatus $status = null;
 
+    #[Assert\NotNull]
     #[ORM\Column]
     private ?\DateTimeImmutable $entry_date = null;
 

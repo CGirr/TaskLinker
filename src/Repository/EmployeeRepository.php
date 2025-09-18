@@ -16,6 +16,15 @@ class EmployeeRepository extends ServiceEntityRepository
         parent::__construct($registry, Employee::class);
     }
 
+    public function getEmployeesOrderedByStatus(): array
+    {
+        return $this->createQueryBuilder('e')
+            ->select('e')
+            ->orderBy('e.status', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
 //    /**
 //     * @return Employee[] Returns an array of Employee objects
 //     */
