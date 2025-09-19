@@ -20,6 +20,9 @@ final class ProjectFactory extends PersistentProxyObjectFactory
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public static function class(): string
     {
         return Project::class;

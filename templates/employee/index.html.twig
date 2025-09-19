@@ -5,6 +5,16 @@
 {% block header %}<h1>Équipe</h1>{% endblock %}
 
 {% block body %}
+    <form action="" method="get">
+        <input
+            type="search"
+            placeholder="Tapez votre recherche ici"
+            id="search"
+            name="search"
+            value="{{ app.request.get('search') }}"
+        >
+        <button class="button-submit" type="submit">Rechercher</button>
+    </form>
     <table id="team-container">
         <thead>
         <tr>
@@ -36,6 +46,7 @@
                     action="{{ path('app_employee_delete', {'id': employee.id}) }}"
                     method="POST" onsubmit="return confirm('Supprimer cet employé ?');"
                 >
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_employee' ~ employee.id) }}">
                     <button class="delete-team" type="submit">Supprimer</button>
                 </form>
             </td>
@@ -46,5 +57,24 @@
             </div>
         {% endfor %}
         </tbody>
-    </table></div>
+    </table>
+    <div class="pagination">
+        {% if data.currentPage == 1 %}
+        {% else %}
+            <a
+                href="{{ path('app_employee',{search: data.search, currentPage: data.currentPage - 1}) }}"
+            >
+                <i class="fa-solid fa-chevron-left"></i>
+            </a>
+        {% endif %}
+        <span class="pagination-pages">{{ data.currentPage }} sur {{ data.totalPages }}</span>
+        {% if data.currentPage == data.totalPages %}
+        {% else %}
+        <a
+            href="{{ path('app_employee',{search: data.search, currentPage: data.currentPage + 1}) }}"
+        >
+            <i class="fa-solid fa-chevron-right"></i>
+        </a>
+        {% endif %}
+    </div>
 {% endblock %}

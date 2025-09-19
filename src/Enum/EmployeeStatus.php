@@ -2,6 +2,9 @@
 
 namespace App\Enum;
 
+/**
+ *
+ */
 enum EmployeeStatus: string
 {
     case Cdi = 'CDI';
@@ -9,6 +12,9 @@ enum EmployeeStatus: string
     case Interim = 'Intérimaire';
     case Freelance = 'Freelance';
 
+    /**
+     * @return string
+     */
     public function getLabel(): string
     {
         return match ($this) {

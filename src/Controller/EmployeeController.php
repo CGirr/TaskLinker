@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\EmployeeSearchDTO;
 use App\Entity\Employee;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
@@ -11,19 +12,53 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ *
+ */
 #[Route('/employee')]
 final class EmployeeController extends AbstractController
 {
+    /**
+     * @param Request $request
+     * @param EmployeeRepository $repository
+     * @return Response
+     */
     #[Route('', name: 'app_employee')]
-    public function index(EmployeeRepository $repository): Response
+    public function index(Request $request, EmployeeRepository $repository): Response
     {
-        $employees = $repository->getEmployeesOrderedByStatus();
+        $search = $request->query->get('search') ?? '';
+        $currentPage = $request->query->get('currentPage', 1);
+        $perPage = 10;
+
+        $totalResults = $search
+            ? $repository->getNumberOfSearchResults($search)
+            : $repository->getNumberOfEmployees();
+
+
+        $totalPages = max(1, ceil($totalResults / $perPage));
+        $offset = ($currentPage - 1) * $perPage;
+
+        $dto = (new EmployeeSearchDTO())
+            ->setPerPage($perPage)
+            ->setSearch($search)
+            ->setTotalPages($totalPages)
+            ->setOffset($offset)
+            ->setCurrentPage($currentPage);
+
+        $employees = $repository->getPaginateEmployees($dto);
 
         return $this->render('employee/index.html.twig', [
             'employees' => $employees,
+            'data' => $dto,
         ]);
     }
 
+    /**
+     * @param Employee $employee
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/edit/{id}', name: 'app_employee_edit', methods: ['GET', 'POST'])]
     public function edit(Employee $employee, Request $request, EntityManagerInterface $entityManager): Response
     {
@@ -44,13 +79,24 @@ final class EmployeeController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Request $request
+     * @param EmployeeRepository $repository
+     * @param EntityManagerInterface $entityManager
+     * @param int $id
+     * @return Response
+     */
     #[Route('/delete/{id}', name: 'app_employee_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function delete(EmployeeRepository $repository, EntityManagerInterface $entityManager, int $id): Response
+    public function delete(Request $request, EmployeeRepository $repository, EntityManagerInterface $entityManager, int $id): Response
     {
         $employee = $repository->find($id);
 
         if (!$employee) {
             throw $this->createNotFoundException('Cet employé n\'existe pas');
+        }
+
+        if (!$this->isCsrfTokenValid('delete_employee' . $employee->getId(), $request->request->get('_token'))) {
+            throw $this->createAccessDeniedException('Token CSRF invalide');
         }
 
         $entityManager->remove($employee);

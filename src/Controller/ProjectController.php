@@ -13,9 +13,16 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ *
+ */
 #[Route('/projects')]
 final class ProjectController extends AbstractController
 {
+    /**
+     * @param ProjectRepository $repository
+     * @return Response
+     */
     #[Route('', name: 'app_projects')]
     public function index(ProjectRepository $repository): Response
     {
@@ -26,6 +33,12 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    /**
+     * @param ProjectRepository $projectRepository
+     * @param TaskRepository $taskRepository
+     * @param int $id
+     * @return Response
+     */
     #[Route('/show/{id}', name: 'app_projects_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(ProjectRepository $projectRepository, TaskRepository $taskRepository, int $id): Response
     {
@@ -40,6 +53,12 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    /**
+     * @param Project|null $project
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
     #[Route('/new', name: 'app_project_new', methods: ['GET', 'POST'])]
     #[Route('/edit/{id}', name: 'app_projects_edit', methods: ['GET', 'POST'])]
     public function new(?Project $project, Request $request, EntityManagerInterface $entityManager): Response
@@ -62,6 +81,12 @@ final class ProjectController extends AbstractController
         ]);
     }
 
+    /**
+     * @param ProjectRepository $repository
+     * @param EntityManagerInterface $entityManager
+     * @param int $id
+     * @return Response
+     */
     #[Route('/archive/{id}', name: 'app_projects_archive', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function delete(ProjectRepository $repository, EntityManagerInterface $entityManager, int $id): Response
     {

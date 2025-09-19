@@ -9,33 +9,54 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ *
+ */
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 class Employee
 {
+    /**
+     * @var int|null
+     */
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
+    /**
+     * @var string|null
+     */
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[ORM\Column(length: 255)]
     private ?string $firstname = null;
 
+    /**
+     * @var string|null
+     */
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[ORM\Column(length: 255)]
     private ?string $lastname = null;
 
+    /**
+     * @var string|null
+     */
     #[Assert\NotBlank]
     #[Assert\Assert\Email()]
     #[ORM\Column(length: 255)]
     private ?string $email = null;
 
+    /**
+     * @var EmployeeStatus|null
+     */
     #[Assert\NotNull]
     #[ORM\Column(enumType: EmployeeStatus::class)]
     private ?EmployeeStatus $status = null;
 
+    /**
+     * @var \DateTimeImmutable|null
+     */
     #[Assert\NotNull]
     #[ORM\Column]
     private ?\DateTimeImmutable $entry_date = null;
@@ -52,22 +73,35 @@ class Employee
     #[ORM\ManyToMany(targetEntity: Project::class, mappedBy: 'members')]
     private Collection $projects;
 
+    /**
+     *
+     */
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
         $this->projects = new ArrayCollection();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return string|null
+     */
     public function getFirstname(): ?string
     {
         return $this->firstname;
     }
 
+    /**
+     * @param string $firstname
+     * @return $this
+     */
     public function setFirstname(string $firstname): static
     {
         $this->firstname = $firstname;
@@ -75,11 +109,18 @@ class Employee
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
+    /**
+     * @param string $lastname
+     * @return $this
+     */
     public function setLastname(string $lastname): static
     {
         $this->lastname = $lastname;
@@ -87,11 +128,18 @@ class Employee
         return $this;
     }
 
+    /**
+     * @return string|null
+     */
     public function getEmail(): ?string
     {
         return $this->email;
     }
 
+    /**
+     * @param string $email
+     * @return $this
+     */
     public function setEmail(string $email): static
     {
         $this->email = $email;
@@ -99,11 +147,18 @@ class Employee
         return $this;
     }
 
+    /**
+     * @return EmployeeStatus|null
+     */
     public function getStatus(): ?EmployeeStatus
     {
         return $this->status;
     }
 
+    /**
+     * @param EmployeeStatus $status
+     * @return $this
+     */
     public function setStatus(EmployeeStatus $status): static
     {
         $this->status = $status;
@@ -111,11 +166,18 @@ class Employee
         return $this;
     }
 
+    /**
+     * @return \DateTimeImmutable|null
+     */
     public function getEntryDate(): ?\DateTimeImmutable
     {
         return $this->entry_date;
     }
 
+    /**
+     * @param \DateTimeImmutable $entry_date
+     * @return $this
+     */
     public function setEntryDate(\DateTimeImmutable $entry_date): static
     {
         $this->entry_date = $entry_date;
@@ -131,6 +193,10 @@ class Employee
         return $this->tasks;
     }
 
+    /**
+     * @param Task $task
+     * @return $this
+     */
     public function addTask(Task $task): static
     {
         if (!$this->tasks->contains($task)) {
@@ -141,6 +207,10 @@ class Employee
         return $this;
     }
 
+    /**
+     * @param Task $task
+     * @return $this
+     */
     public function removeTask(Task $task): static
     {
         if ($this->tasks->removeElement($task)) {
@@ -161,6 +231,10 @@ class Employee
         return $this->projects;
     }
 
+    /**
+     * @param Project $project
+     * @return $this
+     */
     public function addProject(Project $project): static
     {
         if (!$this->projects->contains($project)) {
@@ -171,6 +245,10 @@ class Employee
         return $this;
     }
 
+    /**
+     * @param Project $project
+     * @return $this
+     */
     public function removeProject(Project $project): static
     {
         if ($this->projects->removeElement($project)) {

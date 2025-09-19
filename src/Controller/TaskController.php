@@ -12,9 +12,20 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ *
+ */
 #[Route('/task')]
 final class TaskController extends AbstractController
 {
+    /**
+     * @param Task|null $task
+     * @param int|null $projectId
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param ProjectRepository $projectRepository
+     * @return Response
+     */
     #[Route('/new/{projectId}', name: 'app_task_new', requirements: ['projectId' => '\d+'], methods: ['GET', 'POST'])]
     #[Route('/edit/{id}', name: 'app_task_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function new(
@@ -49,6 +60,13 @@ final class TaskController extends AbstractController
         ]);
     }
 
+    /**
+     * @param TaskRepository $repository
+     * @param EntityManagerInterface $entityManager
+     * @param Request $request
+     * @param int $id
+     * @return Response
+     */
     #[Route('/delete/{id}', name: 'app_task_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
     public function delete(TaskRepository $repository, EntityManagerInterface $entityManager, Request $request, int $id): Response
     {

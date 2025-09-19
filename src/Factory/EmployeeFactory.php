@@ -21,6 +21,9 @@ final class EmployeeFactory extends PersistentProxyObjectFactory
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public static function class(): string
     {
         return Employee::class;

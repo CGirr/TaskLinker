@@ -13,11 +13,18 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class TaskRepository extends ServiceEntityRepository
 {
+    /**
+     * @param ManagerRegistry $registry
+     */
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Task::class);
     }
 
+    /**
+     * @param Project $project
+     * @return array
+     */
     public function findByProjectGroupedByStatusOrderedByDeadline(Project $project): array
     {
         $tasks = $this->createQueryBuilder('t')

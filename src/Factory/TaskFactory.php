@@ -21,6 +21,9 @@ final class TaskFactory extends PersistentProxyObjectFactory
         parent::__construct();
     }
 
+    /**
+     * @return string
+     */
     public static function class(): string
     {
         return Task::class;
