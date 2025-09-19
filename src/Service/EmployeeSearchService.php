@@ -6,10 +6,10 @@ use App\DTO\EmployeeSearchDTO;
 use App\Repository\EmployeeRepository;
 use Symfony\Component\HttpFoundation\Request;
 
-class EmployeeSearchService
+readonly class EmployeeSearchService
 {
     public function __construct(
-        private readonly EmployeeRepository $repository
+        private EmployeeRepository $repository
     ) {
     }
 

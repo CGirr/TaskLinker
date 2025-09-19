@@ -2,7 +2,6 @@
 
 namespace App\Factory;
 
-use App\Entity\Employee;
 use App\Entity\Task;
 use App\Enum\TaskStatus;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;

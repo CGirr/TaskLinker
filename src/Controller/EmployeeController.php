@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\DTO\EmployeeSearchDTO;
 use App\Entity\Employee;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;

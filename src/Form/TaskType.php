@@ -3,7 +3,6 @@
 namespace App\Form;
 
 use App\Entity\Employee;
-use App\Entity\Project;
 use App\Entity\Task;
 use App\Enum\TaskStatus;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;

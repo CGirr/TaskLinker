@@ -5,7 +5,6 @@ namespace App\Repository;
 use App\DTO\EmployeeSearchDTO;
 use App\Entity\Employee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
