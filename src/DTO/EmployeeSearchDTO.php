@@ -21,6 +21,29 @@ class EmployeeSearchDTO
     private int $perPage;
 
     /**
+     * @var array
+     */
+    private array $employees = [];
+
+    /**
+     * @return array
+     */
+    public function getEmployees(): array
+    {
+        return $this->employees;
+    }
+
+    /**
+     * @param array $employees
+     * @return EmployeeSearchDTO
+     */
+    public function setEmployees(array $employees): self
+    {
+        $this->employees = $employees;
+        return $this;
+    }
+
+    /**
      *
      */
     public function __construct()

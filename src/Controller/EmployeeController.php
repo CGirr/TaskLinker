@@ -6,6 +6,7 @@ use App\DTO\EmployeeSearchDTO;
 use App\Entity\Employee;
 use App\Form\EmployeeType;
 use App\Repository\EmployeeRepository;
+use App\Service\EmployeeSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,35 +21,16 @@ final class EmployeeController extends AbstractController
 {
     /**
      * @param Request $request
-     * @param EmployeeRepository $repository
+     * @param EmployeeSearchService $service
      * @return Response
      */
     #[Route('', name: 'app_employee')]
-    public function index(Request $request, EmployeeRepository $repository): Response
+    public function index(Request $request, EmployeeSearchService $service): Response
     {
-        $search = $request->query->get('search') ?? '';
-        $currentPage = $request->query->get('currentPage', 1);
-        $perPage = 10;
-
-        $totalResults = $search
-            ? $repository->getNumberOfSearchResults($search)
-            : $repository->getNumberOfEmployees();
-
-
-        $totalPages = max(1, ceil($totalResults / $perPage));
-        $offset = ($currentPage - 1) * $perPage;
-
-        $dto = (new EmployeeSearchDTO())
-            ->setPerPage($perPage)
-            ->setSearch($search)
-            ->setTotalPages($totalPages)
-            ->setOffset($offset)
-            ->setCurrentPage($currentPage);
-
-        $employees = $repository->getPaginateEmployees($dto);
+        $dto = $service->searchAndPaginateEmployees($request);
 
         return $this->render('employee/index.html.twig', [
-            'employees' => $employees,
+            'employees' => $dto->getEmployees(),
             'data' => $dto,
         ]);
     }
