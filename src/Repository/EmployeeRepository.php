@@ -21,17 +21,6 @@ class EmployeeRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return array
-     */
-    public function getEmployeesOrderedByStatus(): array
-    {
-        return $this->createQueryBuilder('e')
-            ->orderBy('e.status', 'ASC')
-            ->getQuery()
-            ->getArrayResult();
-    }
-
-    /**
      * @param string $search
      * @return int
      */

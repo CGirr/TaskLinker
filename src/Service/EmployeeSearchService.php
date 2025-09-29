@@ -13,12 +13,8 @@ readonly class EmployeeSearchService
     ) {
     }
 
-    public function searchAndPaginateEmployees(Request $request): EmployeeSearchDTO
+    public function searchAndPaginateEmployees(string $search, int $currentPage, int $perPage): EmployeeSearchDTO
     {
-        $search = $request->query->get('search') ?? '';
-        $currentPage = max(1, (int) $request->query->get('currentPage', 1));
-        $perPage = 10;
-
         $totalResults = $search
             ? $this->repository->getNumberOfSearchResults($search)
             : $this->repository->getNumberOfEmployees();

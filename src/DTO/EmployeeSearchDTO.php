@@ -26,6 +26,13 @@ class EmployeeSearchDTO
     private array $employees = [];
 
     /**
+     *
+     */
+    public function __construct()
+    {
+    }
+
+    /**
      * @return array
      */
     public function getEmployees(): array
@@ -41,13 +48,6 @@ class EmployeeSearchDTO
     {
         $this->employees = $employees;
         return $this;
-    }
-
-    /**
-     *
-     */
-    public function __construct()
-    {
     }
 
     /**

@@ -26,7 +26,11 @@ final class EmployeeController extends AbstractController
     #[Route('', name: 'app_employee')]
     public function index(Request $request, EmployeeSearchService $service): Response
     {
-        $dto = $service->searchAndPaginateEmployees($request);
+        $search = (string) $request->query->get('search') ?? '';
+        $currentPage = max(1, (int) $request->query->get('currentPage', 1));
+        $perPage = 10;
+
+        $dto = $service->searchAndPaginateEmployees($search, $currentPage, $perPage);
 
         return $this->render('employee/index.html.twig', [
             'employees' => $dto->getEmployees(),
