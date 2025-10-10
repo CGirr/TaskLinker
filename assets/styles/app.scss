@@ -8,6 +8,7 @@ html, body {
 
 * {
     box-sizing: border-box;
+    margin: 0;
     font-family: 'Manrope', sans-serif;
 }
 
@@ -571,6 +572,61 @@ div.ts-control > div.item[data-ts-item] {
 
 #task_member-ts-control {
     caret-color: transparent;  /* supprime le curseur clignotant */
+}
+
+body#auth-bg {
+    background: url('../images/bg-auth.png') no-repeat center center;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header.auth-header {
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+div#auth-container {
+    background: #4D8077;
+    width: 710px;
+    max-width: 100%;
+    margin: auto;
+    border-radius: 30px;
+    padding-top: 75px;
+    padding-bottom: 75px;
+}
+
+div#auth-container h1 {
+    font-size: 34px;
+    font-weight: bold;
+    text-align: center;
+    color: #FFFFFF;
+}
+
+.auth-buttons {
+    width: 225px;
+    height: 75px;
+    padding-top: 25px;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 10px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.login-button {
+    background: #1C5B50;
+    color: #FFFFFF;
+}
+
+.register-button {
+    background: #B1D89D;
+    color: #4D8077;
 }
 
 @media (max-width: 668px) {

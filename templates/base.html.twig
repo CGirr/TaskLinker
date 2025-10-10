@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}Welcome!{% endblock %}</title>
         {% block stylesheets %}
+            {{ encore_entry_link_tags('app') }}
         {% endblock %}
 
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
@@ -11,14 +12,14 @@
               crossorigin="anonymous" referrerpolicy="no-referrer" />
 
         {% block javascripts %}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
+            {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
     <body>
         <div id="main-container">
             <nav>
                 <a href="{{ path('app_projects') }}" id="logo">
-                    <img src="{{ asset('./images/logo.png') }}" alt="Logo TaskLinker" />
+                    <img src="{{ asset('build/images/logo.png') }}" alt="Logo TaskLinker" />
                 </a>
                 {% set currentRoute = app.current_route %}
                 <ul id="main-menu">

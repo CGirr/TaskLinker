@@ -4,6 +4,7 @@ namespace App\Factory;
 
 use App\Entity\Employee;
 use App\Enum\EmployeeStatus;
+use Doctrine\Common\Collections\ArrayCollection;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 /**

@@ -3,13 +3,16 @@
 namespace App\Controller;
 
 use App\Entity\Employee;
+use App\Enum\EmployeeStatus;
 use App\Form\EmployeeType;
+use App\Form\RegisterFormType;
 use App\Repository\EmployeeRepository;
 use App\Service\EmployeeSearchService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 /**
@@ -19,11 +22,21 @@ use Symfony\Component\Routing\Attribute\Route;
 final class EmployeeController extends AbstractController
 {
     /**
+     * @return Response
+     */
+    #[Route('', name: 'app_dispatch')]
+    public function dispatch(): Response
+    {
+        return $this->render('authentication/dispatch.html.twig');
+    }
+
+
+    /**
      * @param Request $request
      * @param EmployeeSearchService $service
      * @return Response
      */
-    #[Route('', name: 'app_employee')]
+    #[Route('/index', name: 'app_employee')]
     public function index(Request $request, EmployeeSearchService $service): Response
     {
         $search = (string) $request->query->get('search') ?? '';
@@ -39,14 +52,52 @@ final class EmployeeController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @param EntityManagerInterface $entityManager
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return Response
+     */
+    #[Route('/register', name: 'app_employee_register')]
+    public function register(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response {
+        $employee = new Employee();
+        $employee
+            ->setStatus(EmployeeStatus::Cdi)
+            ->setEntryDate(new \DateTimeImmutable());
+        $form = $this->createForm(RegisterFormType::class, $employee);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $plainPassword = $form->get("plainPassword")->getData();
+            $hashedPassword = $passwordHasher->hashPassword($employee, $plainPassword);
+            $employee->setPassword($hashedPassword);
+
+            $entityManager->persist($employee);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_employee');
+        }
+
+        return $this->render('authentication/register.html.twig', [
+            'form' => $form,
+        ]);
+    }
+
+    /**
      * @param Employee $employee
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
     #[Route('/edit/{id}', name: 'app_employee_edit', methods: ['GET', 'POST'])]
-    public function edit(Employee $employee, Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function edit(
+        Employee $employee,
+        Request $request,
+        EntityManagerInterface $entityManager
+    ): Response {
         $form = $this->createForm(EmployeeType::class, $employee);
         $form->handleRequest($request);
 
@@ -72,8 +123,12 @@ final class EmployeeController extends AbstractController
      * @return Response
      */
     #[Route('/delete/{id}', name: 'app_employee_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function delete(Request $request, EmployeeRepository $repository, EntityManagerInterface $entityManager, int $id): Response
-    {
+    public function delete(
+        Request $request,
+        EmployeeRepository $repository,
+        EntityManagerInterface $entityManager,
+        int $id
+    ): Response {
         $employee = $repository->find($id);
 
         if (!$employee) {
