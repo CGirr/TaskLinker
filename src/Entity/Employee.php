@@ -81,7 +81,6 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var string|null
      */
-    #[Assert\NotNull]
     #[ORM\Column(length: 255, nullable: true, options: ['default' => null])]
     private ?string $password = null;
 
@@ -96,6 +95,8 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function __construct()
     {
+        $this->entry_date = new \DateTimeImmutable();
+        $this->status = EmployeeStatus::Cdi;
         $this->tasks = new ArrayCollection();
         $this->projects = new ArrayCollection();
     }
@@ -319,11 +320,13 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials(): void
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
+    /**
+     * @return string
+     */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        return (string) $this->getEmail();
     }
 }

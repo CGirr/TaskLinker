@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
     {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
+        <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
     {% endblock %}
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
@@ -17,9 +17,10 @@
 </head>
 <body id="auth-bg">
         <header class="auth-header">
-            <img src="{{ asset('build/images/logo.png') }}" alt="Logo TaskLinker" />
+            <img src="{{ asset('images/logo.png') }}" alt="Logo TaskLinker" />
         </header>
-        <div id="auth-container">
+        <div id="auth-container" class="{% block auth_class %}{% endblock %}">
+            <h1>{% block h1 %}Bienvenue sur TaskLinker{% endblock %}</h1>
             {% block body %}
 
             {% endblock %}

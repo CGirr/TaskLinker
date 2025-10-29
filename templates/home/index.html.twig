@@ -1,0 +1,17 @@
+{% extends 'base-auth.html.twig' %}
+
+{% block title %}Bienvenue - TaskLinker{% endblock %}
+
+{% block auth_class %}auth_home{% endblock %}
+
+{% block body %}
+    <h2>Commencez dès maintenant - gratuitement</h2>
+    <h3>Vous avez déjà un compte ?</h3>
+    <a class="auth-buttons login-button" href="{{ path('app_login') }}">Se connecter</a>
+    <div class="separator">
+        <hr>
+        <h3>ou</h3>
+        <hr>
+    </div>
+    <a class="auth-buttons register-button" href="{{ path('app_register') }}">S'inscrire</a>
+{% endblock %}

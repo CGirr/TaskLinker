@@ -22,16 +22,6 @@ use Symfony\Component\Routing\Attribute\Route;
 final class EmployeeController extends AbstractController
 {
     /**
-     * @return Response
-     */
-    #[Route('', name: 'app_dispatch')]
-    public function dispatch(): Response
-    {
-        return $this->render('authentication/dispatch.html.twig');
-    }
-
-
-    /**
      * @param Request $request
      * @param EmployeeSearchService $service
      * @return Response
