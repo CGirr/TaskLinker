@@ -30,7 +30,7 @@ final class TaskController extends AbstractController
     #[Route('/new/{project}', name: 'app_task_new', methods: ['GET', 'POST'])]
     #[Route('/edit/{task}', name: 'app_task_edit', methods: ['GET', 'POST'])]
     public function new(
-        #[MapsEntity(mapping: ['task' => 'id'])] ?Task $task,
+        #[MapEntity(mapping: ['task' => 'id'])] ?Task $task,
         #[MapEntity(mapping: ['project' => 'id'])] ?Project $project,
         Request $request,
         EntityManagerInterface $entityManager,

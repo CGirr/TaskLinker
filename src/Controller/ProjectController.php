@@ -2,18 +2,17 @@
 
 namespace App\Controller;
 
-use App\Entity\Employee;
 use App\Entity\Project;
 use App\Enum\TaskStatus;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  *
@@ -47,9 +46,13 @@ final class ProjectController extends AbstractController
      * @return Response
      */
     #[Route('/show/{project}', name: 'app_projects_show', methods: ['GET'])]
-    #[IsGranted('PROJECT_VIEW', 'project')]
-    public function show(Project $project, TaskRepository $taskRepository): Response
+    public function show(?Project $project, TaskRepository $taskRepository): Response
     {
+        if (!$project) {
+            throw $this->createNotFoundException('Projet introuvable');
+        }
+
+        $this->denyAccessUnlessGranted('PROJECT_VIEW', $project);
         $members = $project->getMembers();
         $tasksByStatus = $taskRepository->findByProjectGroupedByStatusOrderedByDeadline($project);
         return $this->render('projects/show.html.twig', [
