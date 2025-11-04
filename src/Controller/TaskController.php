@@ -2,11 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Project;
 use App\Entity\Task;
 use App\Form\TaskType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,24 +22,24 @@ final class TaskController extends AbstractController
 {
     /**
      * @param Task|null $task
-     * @param int|null $projectId
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @param ProjectRepository $projectRepository
      * @return Response
      */
-    #[Route('/new/{projectId}', name: 'app_task_new', requirements: ['projectId' => '\d+'], methods: ['GET', 'POST'])]
-    #[Route('/edit/{id}', name: 'app_task_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route('/new/{project}', name: 'app_task_new', methods: ['GET', 'POST'])]
+    #[Route('/edit/{task}', name: 'app_task_edit', methods: ['GET', 'POST'])]
     public function new(
-        ?Task $task, ?int $projectId, Request $request, EntityManagerInterface $entityManager, ProjectRepository $projectRepository): Response
-    {
-        $task ??= new Task();
-
-        if ($task->getId() === null && $projectId) {
-            $project = $projectRepository->find($projectId);
+        #[MapsEntity(mapping: ['task' => 'id'])] ?Task $task,
+        #[MapEntity(mapping: ['project' => 'id'])] ?Project $project,
+        Request $request,
+        EntityManagerInterface $entityManager,
+    ): Response {
+        if (!$task) {
             if (!$project) {
                 throw $this->createNotFoundException('Projet introuvable');
             }
+            $task = new Task();
             $task->setProject($project);
         }
 
@@ -47,11 +49,10 @@ final class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $task = $form->getData();
             $entityManager->persist($task);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_projects_show', ['id' => $task->getProject()->getId()]);
+            return $this->redirectToRoute('app_projects_show', ['project' => $task->getProject()->getId()]);
         }
 
         return $this->render('task/new.html.twig', [
@@ -67,11 +68,12 @@ final class TaskController extends AbstractController
      * @param int $id
      * @return Response
      */
-    #[Route('/delete/{id}', name: 'app_task_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
-    public function delete(TaskRepository $repository, EntityManagerInterface $entityManager, Request $request, int $id): Response
-    {
-        $task = $repository->find($id);
-
+    #[Route('/delete/{task}', name: 'app_task_delete', methods: ['POST'])]
+    public function delete(
+        Task $task,
+        EntityManagerInterface $entityManager,
+        Request $request
+    ): Response {
         if (!$task) {
             throw $this->createNotFoundException('Tâche introuvable');
         }
@@ -83,6 +85,6 @@ final class TaskController extends AbstractController
         $entityManager->remove($task);
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_projects_show', ['id' => $task->getProject()->getId()]);
+        return $this->redirectToRoute('app_projects_show', ['project' => $task->getProject()->getId()]);
     }
 }

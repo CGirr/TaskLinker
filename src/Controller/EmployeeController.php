@@ -82,7 +82,7 @@ final class EmployeeController extends AbstractController
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
-    #[Route('/edit/{id}', name: 'app_employee_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{employee}', name: 'app_employee_edit', methods: ['GET', 'POST'])]
     public function edit(
         Employee $employee,
         Request $request,
@@ -112,15 +112,12 @@ final class EmployeeController extends AbstractController
      * @param int $id
      * @return Response
      */
-    #[Route('/delete/{id}', name: 'app_employee_delete', requirements: ['id' => '\d+'], methods: ['POST'])]
+    #[Route('/delete/{employee}', name: 'app_employee_delete', methods: ['POST'])]
     public function delete(
         Request $request,
-        EmployeeRepository $repository,
+        Employee $employee,
         EntityManagerInterface $entityManager,
-        int $id
     ): Response {
-        $employee = $repository->find($id);
-
         if (!$employee) {
             throw $this->createNotFoundException('Cet employé n\'existe pas');
         }

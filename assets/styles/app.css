@@ -442,6 +442,24 @@ form {
     width: 320px;
 }
 
+.form-roles {
+    margin-bottom: 10px;
+}
+
+.form-roles input[type="radio"] {
+    width: 18px;
+    height: 18px;
+    margin: 0 8px 10px 0;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.form-roles label {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0 15px 10px 0;
+}
+
 form label {
     font-size: 16px;
     line-height: 22px;
@@ -679,6 +697,12 @@ div#auth-container form label {
     justify-content: center;
     text-align: center;
     text-decoration: none;
+}
+
+.logout-button {
+    display: flex;
+    background: #ff584a;
+    color: #FFFFFF;
 }
 
 .login-button {

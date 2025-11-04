@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Employee;
 use App\Entity\Project;
 use App\Enum\TaskStatus;
 use App\Form\ProjectType;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  *
@@ -26,7 +28,13 @@ final class ProjectController extends AbstractController
     #[Route('', name: 'app_projects')]
     public function index(ProjectRepository $repository): Response
     {
-        $projects = $repository->findActiveProjects();
+        $employee = $this->getUser();
+
+        if (in_array('ROLE_ADMIN', $employee->getRoles())) {
+            $projects = $repository->findActiveProjects();
+        } else {
+            $projects = $repository->findByMember($employee);
+        }
 
         return $this->render('projects/index.html.twig', [
             'projects' => $projects,
@@ -34,15 +42,14 @@ final class ProjectController extends AbstractController
     }
 
     /**
-     * @param ProjectRepository $projectRepository
+     * @param Project $project
      * @param TaskRepository $taskRepository
-     * @param int $id
      * @return Response
      */
-    #[Route('/show/{id}', name: 'app_projects_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(ProjectRepository $projectRepository, TaskRepository $taskRepository, int $id): Response
+    #[Route('/show/{project}', name: 'app_projects_show', methods: ['GET'])]
+    #[IsGranted('PROJECT_VIEW', 'project')]
+    public function show(Project $project, TaskRepository $taskRepository): Response
     {
-        $project = $projectRepository->find($id);
         $members = $project->getMembers();
         $tasksByStatus = $taskRepository->findByProjectGroupedByStatusOrderedByDeadline($project);
         return $this->render('projects/show.html.twig', [
@@ -60,9 +67,10 @@ final class ProjectController extends AbstractController
      * @return Response
      */
     #[Route('/new', name: 'app_project_new', methods: ['GET', 'POST'])]
-    #[Route('/edit/{id}', name: 'app_projects_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{project}', name: 'app_projects_edit', methods: ['GET', 'POST'])]
     public function new(?Project $project, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $project ??= new Project();
 
         $form = $this->createForm(ProjectType::class, $project);
@@ -73,7 +81,7 @@ final class ProjectController extends AbstractController
             $entityManager->persist($project);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_projects_show', ['id' => $project->getId()]);
+            return $this->redirectToRoute('app_projects_show', ['project' => $project->getId()]);
         }
 
         return $this->render('projects/new.html.twig', [
@@ -82,20 +90,14 @@ final class ProjectController extends AbstractController
     }
 
     /**
-     * @param ProjectRepository $repository
+     * @param Project $project
      * @param EntityManagerInterface $entityManager
-     * @param int $id
      * @return Response
      */
-    #[Route('/archive/{id}', name: 'app_projects_archive', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function delete(ProjectRepository $repository, EntityManagerInterface $entityManager, int $id): Response
+    #[Route('/archive/{project}', name: 'app_projects_archive', methods: ['GET'])]
+    public function delete(Project $project, EntityManagerInterface $entityManager): Response
     {
-        $project = $repository->find($id);
-        if (!$project) {
-            throw $this->createNotFoundException(
-                'Ce projet n\'existe pas'
-            );
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $project->setArchived(true);
         $entityManager->persist($project);
         $entityManager->flush();

@@ -30,7 +30,7 @@
 
     {% if task.id is not null %}
         <form
-            action="{{ path('app_task_delete', {id: task.id}) }}"
+            action="{{ path('app_task_delete', {task: task.id}) }}"
             method="POST"
             onsubmit="return confirm('Supprimer cette tâche ?');"
         >

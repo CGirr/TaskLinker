@@ -10,7 +10,9 @@
             <div class="avatar">{{ member.firstname|first ~ '' ~ member.lastname|first }}</div>
             {% endfor %}
         </div>
-        <a class="button" href="{{ path('app_projects_edit', {id: project.id}) }}">Modifier</a>
+        {% if is_granted('ROLE_ADMIN') %}
+        <a class="button" href="{{ path('app_projects_edit', {project: project.id}) }}">Modifier</a>
+        {% endif %}
     </div>
 {% endblock %}
 {% block body %}
@@ -20,7 +22,7 @@
             <h2>{{ status.getLabel() }}</h2>
             <div class="tasks-list">
                 {% for task in tasksByStatus[status.value] %}
-                <a class="task" href="{{ path('app_task_edit', {id: task.id}) }}">
+                <a class="task" href="{{ path('app_task_edit', {task: task.id}) }}">
                     <h3>{{ task.title }}</h3>
                     <p>{{ task.description ? task.description : 'Pas de description' }}</p>
                     <div class="task-infos">
@@ -41,7 +43,7 @@
                     Aucune tâche n'a été trouvée.
                 </div>
                 {% endfor %}
-                <a href="{{ path('app_task_new', {projectId: project.id}) }}" class="task-add">
+                <a href="{{ path('app_task_new', {project: project.id}) }}" class="task-add">
                     + Ajouter une tâche
                 </a>
             </div>

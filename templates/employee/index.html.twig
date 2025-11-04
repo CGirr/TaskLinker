@@ -19,6 +19,7 @@
         <thead>
         <tr>
             <th>Prénom, Nom</th>
+            <th>Role</th>
             <th>Statut</th>
             <th>Actions</th>
         </tr>
@@ -37,13 +38,14 @@
                     </div>
                 </div>
             </td>
+            <td>{{ employee.rolelabels|join(',') }}</td>
             <td>{{ employee.status.value }}</td>
             <td>
-                <a class="button button-edit-team" href="{{ path('app_employee_edit', {id: employee.id}) }}">
+                <a class="button button-edit-team" href="{{ path('app_employee_edit', {employee: employee.id}) }}">
                     Éditer
                 </a>
                 <form
-                    action="{{ path('app_employee_delete', {'id': employee.id}) }}"
+                    action="{{ path('app_employee_delete', {'employee': employee.id}) }}"
                     method="POST" onsubmit="return confirm('Supprimer cet employé ?');"
                 >
                     <input type="hidden" name="_token" value="{{ csrf_token('delete_employee' ~ employee.id) }}">

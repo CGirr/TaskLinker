@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Employee;
 use App\Entity\Project;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,6 +31,16 @@ class ProjectRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+    }
+
+    public function findByMember(Employee $employee): array
+    {
+        return $this->createQueryBuilder('p')
+            ->innerJoin('p.members', 'm')
+            ->andWhere('m.id = :employeeId')
+            ->setParameter('employeeId', $employee->getId())
+            ->getQuery()
+            ->getResult();
     }
 
 //    /**

@@ -5,23 +5,27 @@
 {% block header %}
     <div class="flex-header">
         <h1>Projets</h1>
+        {% if is_granted('ROLE_ADMIN') %}
         <a class="button" href="{{ path('app_project_new') }}">Ajouter un projet</a>
+        {% endif %}
     </div>
 {% endblock %}
 {% block body %}
     <div id="projects-container">
         {% for project in projects %}
         <article class="card-project">
-            <a href="{{ path('app_projects_show', {id: project.id}) }}">
+            <a href="{{ path('app_projects_show', {project: project.id}) }}">
                 <h2>{{ project.title }}</h2>
             </a>
+            {% if is_granted('ROLE_ADMIN') %}
             <div class="card-project-icons">
-                <a href="{{ path('app_projects_edit', {id: project.id}) }}"><i class="fa-solid fa-pen"></i></a>
+                <a href="{{ path('app_projects_edit', {project: project.id}) }}"><i class="fa-solid fa-pen"></i></a>
                 <a
-                    href="{{ path('app_projects_archive', {id: project.id}) }}"
+                    href="{{ path('app_projects_archive', {project: project.id}) }}"
                     onclick="return confirm('Archiver ce projet ?');"
                 ><i class="fa-solid fa-trash"></i></a>
             </div>
+            {% endif %}
         </article>
         {% else %}
             <div>

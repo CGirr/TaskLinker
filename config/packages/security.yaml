@@ -20,14 +20,16 @@ security:
                 csrf_token_id: authenticate
             logout:
                 path: app_logout
+                target: app_home
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
                 always_remember_me: true
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - {path: '^/employee', roles: ROLE_ADMIN}
+        - {path: '^/task', roles: ROLE_USER}
+        - {path: '^/projects', roles: ROLE_USER}
 
 when@test:
     security:

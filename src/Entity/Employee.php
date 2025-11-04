@@ -318,6 +318,29 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return array
+     */
+    public function getRoleLabels(): array
+    {
+        $labels = [
+            'ROLE_USER' => 'Employé',
+            'ROLE_ADMIN' => 'Chef de projet',
+        ];
+
+        $result = [];
+
+        foreach ($this->roles as $role) {
+            if (isset($labels[$role])) {
+                $result[] = $labels[$role];
+            } else {
+                $result[] = $role;
+            }
+        }
+
+        return $result;
+    }
+
     public function eraseCredentials(): void
     {
     }
