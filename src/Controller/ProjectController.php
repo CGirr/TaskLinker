@@ -8,7 +8,6 @@ use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -41,7 +40,7 @@ final class ProjectController extends AbstractController
     }
 
     /**
-     * @param Project $project
+     * @param Project|null $project
      * @param TaskRepository $taskRepository
      * @return Response
      */
@@ -64,18 +63,41 @@ final class ProjectController extends AbstractController
     }
 
     /**
-     * @param Project|null $project
      * @param Request $request
      * @param EntityManagerInterface $entityManager
      * @return Response
      */
     #[Route('/new', name: 'app_project_new', methods: ['GET', 'POST'])]
-    #[Route('/edit/{project}', name: 'app_projects_edit', methods: ['GET', 'POST'])]
-    public function new(?Project $project, Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $project ??= new Project();
+        $project = new Project();
+        return $this->handleForm($project, $request, $entityManager);
+    }
 
+    #[Route('/edit/{project}', name: 'app_projects_edit', methods: ['GET', 'POST'])]
+    public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        return $this->handleForm($project, $request, $entityManager);
+    }
+
+    /**
+     * @param Project $project
+     * @param EntityManagerInterface $entityManager
+     * @return Response
+     */
+    #[Route('/archive/{project}', name: 'app_projects_archive', methods: ['GET'])]
+    public function archive(Project $project, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+        $project->setArchived(true);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_projects');
+    }
+
+    private function handleForm(Project $project, Request $request, EntityManagerInterface $entityManager): Response
+    {
         $form = $this->createForm(ProjectType::class, $project);
         $form->handleRequest($request);
 
@@ -87,23 +109,8 @@ final class ProjectController extends AbstractController
             return $this->redirectToRoute('app_projects_show', ['project' => $project->getId()]);
         }
 
-        return $this->render('projects/new.html.twig', [
+        return $this->render('projects/form.html.twig', [
             'form' => $form,
         ]);
-    }
-
-    /**
-     * @param Project $project
-     * @param EntityManagerInterface $entityManager
-     * @return Response
-     */
-    #[Route('/archive/{project}', name: 'app_projects_archive', methods: ['GET'])]
-    public function delete(Project $project, EntityManagerInterface $entityManager): Response
-    {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
-        $project->setArchived(true);
-        $entityManager->persist($project);
-        $entityManager->flush();
-        return $this->redirectToRoute('app_projects');
     }
 }
