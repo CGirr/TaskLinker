@@ -12,13 +12,14 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Scheb\TwoFactorBundle\Model\Email\TwoFactorInterface;
 
 /**
  *
  */
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
 #[UniqueEntity('email')]
-class Employee implements UserInterface, PasswordAuthenticatedUserInterface
+class Employee implements UserInterface, PasswordAuthenticatedUserInterface, TwoFactorInterface
 {
     /**
      * @var int|null
@@ -89,6 +90,9 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column(type: Types::JSON, options: ['default' => '["ROLE_USER"]'])]
     private array $roles = [];
+
+    #[ORM\Column(type: 'string', nullable: true)]
+    private ?string $authCode;
 
     /**
      *
@@ -351,5 +355,29 @@ class Employee implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return (string) $this->getEmail();
+    }
+
+    public function isEmailAuthEnabled(): bool
+    {
+        return true;
+    }
+
+    public function getEmailAuthRecipient(): string
+    {
+        return $this->email;
+    }
+
+    public function getEmailAuthCode(): string|null
+    {
+        if (null === $this->authCode) {
+            throw new \LogicException('The email auth code is null.');
+        }
+
+        return $this->authCode;
+    }
+
+    public function setEmailAuthCode(string $authCode): void
+    {
+       $this->authCode = $authCode;
     }
 }

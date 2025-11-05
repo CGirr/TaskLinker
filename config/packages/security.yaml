@@ -26,7 +26,12 @@ security:
                 lifetime: 604800
                 path: /
                 always_remember_me: true
+            two_factor:
+                auth_form_path: 2fa_login
+                check_path: 2fa_login_check
     access_control:
+        - {path: ^/logout, role: PUBLIC_ACCESS}
+        - {path: ^/2fa, role: IS_AUTHENTICATED_2FA_IN_PROGRESS}
         - {path: '^/employee', roles: ROLE_ADMIN}
         - {path: '^/task', roles: ROLE_USER}
         - {path: '^/projects', roles: ROLE_USER}
