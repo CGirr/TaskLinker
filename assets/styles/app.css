@@ -700,9 +700,8 @@ div#auth-container form label {
 }
 
 .logout-button {
-    display: flex;
     background: #ff584a;
-    color: #FFFFFF;
+    text-align: center;
 }
 
 .login-button {

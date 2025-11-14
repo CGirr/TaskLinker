@@ -107,9 +107,8 @@ final class EmployeeController extends AbstractController
 
     /**
      * @param Request $request
-     * @param EmployeeRepository $repository
+     * @param Employee $employee
      * @param EntityManagerInterface $entityManager
-     * @param int $id
      * @return Response
      */
     #[Route('/delete/{employee}', name: 'app_employee_delete', methods: ['POST'])]

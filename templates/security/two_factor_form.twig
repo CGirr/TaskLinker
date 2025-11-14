@@ -1,0 +1,44 @@
+{% extends 'base-auth.html.twig' %}
+
+{% block auth_class %}auth_home{% endblock %}
+
+{% block h1 %}Authentification à deux facteurs{% endblock %}
+
+{% block body %}
+
+{% if authenticationError %}
+    <p>{{ authenticationError|trans(authenticationErrorData, 'SchebTwoFactorBundle') }}</p>
+{% endif %}
+
+{% if availableTwoFactorProviders|length > 1 %}
+    <p>{{ "choose_provider"|trans({}, 'SchebTwoFactorBundle') }}:
+        {% for provider in availableTwoFactorProviders %}
+            <a href="{{ path("2fa_login", {"preferProvider": provider}) }}">{{ provider }}</a>
+        {% endfor %}
+    </p>
+{% endif %}
+<form class="form" action="{{ checkPathUrl ? checkPathUrl: path(checkPathRoute) }}" method="post">
+    <p class="widget">
+        <label>Entrez votre code reçu par email</label>
+        <input
+            id="_auth_code"
+            type="text"
+            name="{{ authCodeParameterName }}"
+            autocomplete="one-time-code"
+            autofocus
+            inputmode="numeric"
+            pattern="[0-9]*"
+        />
+    </p>
+
+    {% if displayTrustedOption %}
+        <p class="widget"><label for="_trusted"><input id="_trusted" type="checkbox" name="{{ trustedParameterName }}" /> {{ "trusted"|trans({}, 'SchebTwoFactorBundle') }}</label></p>
+    {% endif %}
+    {% if isCsrfProtectionEnabled %}
+        <input type="hidden" name="{{ csrfParameterName }}" value="{{ csrf_token(csrfTokenId) }}">
+    {% endif %}
+    <button class="auth-buttons login-button form-button" type="submit">Se connecter</button>
+</form>
+
+<p class="auth-link" class=""><a href="{{ logoutPath }}">Retour à l'accueil</a></p>
+{% endblock %}

@@ -6,3 +6,4 @@ scheb_two_factor:
     email:
         enabled: true
         sender_email: no-reply@example.com
+        template: security/two_factor_form.twig
