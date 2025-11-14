@@ -9,12 +9,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 final class ProjectVoter extends Voter
 {
-    public const EDIT = 'PROJECT_EDIT';
     public const VIEW = 'PROJECT_VIEW';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return in_array($attribute, [self::EDIT, self::VIEW])
+        return $attribute === self::VIEW
             && $subject instanceof Project;
     }
 
@@ -29,7 +28,6 @@ final class ProjectVoter extends Voter
         $project = $subject;
 
         return match ($attribute) {
-            self::EDIT => $this->canEdit($project, $user),
             self::VIEW => $this->canView($project, $user),
             default => false,
         };
@@ -42,10 +40,5 @@ final class ProjectVoter extends Voter
         }
 
         return ($project->getMembers()->contains($employee));
-    }
-
-    private function canEdit(Project $project, Employee $employee): bool
-    {
-        return in_array('ROLE_ADMIN', $employee->getRoles());
     }
 }
