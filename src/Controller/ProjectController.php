@@ -2,12 +2,14 @@
 
 namespace App\Controller;
 
+use App\Entity\Employee;
 use App\Entity\Project;
 use App\Enum\TaskStatus;
 use App\Form\ProjectType;
 use App\Repository\ProjectRepository;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use InvalidArgumentException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,6 +30,10 @@ final class ProjectController extends AbstractController
     public function index(ProjectRepository $repository): Response
     {
         $employee = $this->getUser();
+
+        if (!$employee instanceof Employee) {
+            throw new InvalidArgumentException("Vous ne pouvez pas accéder à cette page");
+        }
 
         if (in_array('ROLE_ADMIN', $employee->getRoles())) {
             $projects = $repository->findActiveProjects();
