@@ -12,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  *
@@ -45,13 +46,12 @@ final class ProjectController extends AbstractController
      * @return Response
      */
     #[Route('/show/{project}', name: 'app_projects_show', methods: ['GET'])]
+    #[IsGranted('PROJECT_VIEW', subject: 'project')]
     public function show(?Project $project, TaskRepository $taskRepository): Response
     {
         if (!$project) {
             throw $this->createNotFoundException('Projet introuvable');
         }
-
-        $this->denyAccessUnlessGranted('PROJECT_VIEW', $project);
         $members = $project->getMembers();
         $tasksByStatus = $taskRepository->findByProjectGroupedByStatusOrderedByDeadline($project);
         return $this->render('projects/show.html.twig', [
@@ -68,17 +68,17 @@ final class ProjectController extends AbstractController
      * @return Response
      */
     #[Route('/new', name: 'app_project_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $project = new Project();
         return $this->handleForm($project, $request, $entityManager);
     }
 
     #[Route('/edit/{project}', name: 'app_projects_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Project $project, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         return $this->handleForm($project, $request, $entityManager);
     }
 
@@ -88,9 +88,9 @@ final class ProjectController extends AbstractController
      * @return Response
      */
     #[Route('/archive/{project}', name: 'app_projects_archive', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function archive(Project $project, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_ADMIN');
         $project->setArchived(true);
         $entityManager->flush();
         return $this->redirectToRoute('app_projects');
